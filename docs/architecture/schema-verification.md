@@ -1,0 +1,9 @@
+# Documentation schema verification
+
+Current registry checked before the next API corrective supplement. This is not a runtime/host/cryptographic/semantic-oracle pass. Validator: jsonschema4.25.1 with FormatChecker and rfc3339-validator0.1.4, Python3.13.5. Date-time checker availability was explicitly asserted and invalid February30 rejection verified. Initially the optional date-time checker was missing despite FormatChecker construction; that unavailable check was corrected by adding the pinned checker before reporting format validation.
+
+Results: registry and all66 definition-root schemas pass meta-schema checks; ten transitive-closure materialized tool schemas pass. All19 explicitly labeled examples pass declared schemas with format assertion. All12 negative instances rejected: confirm false, forged grant, null operation, unknown field, invalid ref, invalid calendar instant, non-Z offset, bad signature, missing session, missing base, grant Unicode base, unknown grant field. Twenty JSON blocks parse;195 local references resolve. Materialized tuple: 41725 compact UTF8 bytes, not measured tokenizer/context fit. Re-run against changed registry before final freeze.
+
+Tool-only package tuple: jsonschema4.25.1,attrs25.3.0,referencing0.36.2,jsonschema-specifications2025.4.1,rpds-py0.27.1,typing-extensions4.14.1,rfc3339-validator0.1.4,six1.17.0. PyPI metadata wheel SHA256 verified before temporary workspace unpacking; no GRM backend dependency/source/config/workflow introduced. No installed model/binary execution or production data.
+
+Domain checks remain separate: duplicate-key decoder rejection, real reference/version/cutoff/attribution/support/eligibility rules, signatures, replay effects, storage/crash behavior and resource/host conformance. API-F1/F2/F3 are design findings despite shape conformance. The tool environment is available to independent QE for reproduction and is not part of GRM runtime.

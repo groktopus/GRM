@@ -2472,7 +2472,9 @@ Definition **TerminalGrant**:
 
 ## Recorded refinement checks and limits
 
-- Registry JSON serialization/parse round-trip: passed; 66 definitions, 193 local references, zero unresolved.
+Later integration verification is recorded in [schema verification](schema-verification.md): full 2020-12 checks with active date-time format assertion now ran for the current registry. The earlier dependency-missing statement below is historical, not the current tooling status. Any next schema revision requires revalidation.
+
+- Registry JSON serialization/parse round-trip: passed; 66 definitions, 195 local references, zero unresolved.
 - Minimal input/output materialization: 41725 compact UTF-8 schema bytes across ten objects; actual token fit in the selected host is not measured.
 - Bounded in-memory structural probes over the used keyword subset: **19 positive instances accepted, 13 invalid instances rejected**. Negatives include forged MCP owner_grant, confirm:false, mixed cursor/question, malformed reference, null OpID, extra input field, missing Plan authorization, model-approved authorization state, four-hop limit substitution/five-entity path, private committed_unavailable/deleted-view payload and malformed grant signature length.
 - These custom probes are not JSON Schema meta-schema validation, signature verification or provider/host conformance. The prior Python jsonschema dependency was missing; no validator package was installed or repository/environment change made. Full standards validation and domain/crypto/host/runtime tests remain not run.
