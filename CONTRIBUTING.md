@@ -12,4 +12,8 @@ GRM is in discovery. Bring a concrete relationship problem, a useful source, or 
 
 The research documents are inputs to that process, not approval to implement. Do not submit speculative scaffolding or implementation prototypes in place of architecture review.
 
+## Go backend contributions
+
+Go is the language of choice for all GRM backend services, including the proof of concept. See [ADR 0001](docs/adr/0001-choose-go-for-backend-services.md) for the rationale and the [Go contribution standards](docs/go-standards.md) for style, dependencies, and checks. Significant decisions go in the [ADR log](docs/adr/README.md). Use a new ADR to change an accepted decision rather than rewriting why it was made.
+
 For research contributions, link the primary source and explain which design decision it informs. For examples, use fictional people and synthetic records. Do not submit real contacts, private meeting transcripts, sensitive events, or credentials.
