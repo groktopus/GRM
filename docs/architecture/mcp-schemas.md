@@ -1,16 +1,10 @@
-> Proposed governing documentation. Read [MVP integration](mvp.md) first: its explicit dispositions supersede conflicting specialist-era wording and close the listed integration gaps. No implementation is authorized until maintainer agreement, approval and default-branch merge.
+# GRM MCP v1 consolidated schema registry
 
-# GRM MCP v1 JSON Schema companion — reconciled refinement
+Proposed governing architecture; not implementation approval. The [corrected MCP contract](mcp-corrections.md) and [governing integration](mvp.md) define semantics. Five tools remain. This registry composes the reviewed source schemas with GRO-26 corrective-contract-supplement revision530b03fa-ddc6-4458-aa4c-52cd17f8b83a; it replaces the old registry, not an implementer-selected alternative.
 
-Status: documentation proposal, companion to the [contract proposal](/GRO/issues/GRO-26#document-mcp-contract-proposal). Amended for GRO-24 reconciliation revision 4ebf319a-8eb8-4ce9-9b9b-248483bf5a60. No implementation, approved architecture or supported runtime claimed.
+JSON Schema2020-12. Each input/output uses a self-contained transitive $defs closure rooted at its named definition; never use the registry alone as permissive tool input. All objects closed unless explicitly stated. Enable actual date/date-time format assertion; check checker availability. Shape validation does not establish source support, signatures, authenticated issuance, valid identity/scope/time, control freshness, global budgets or domain effects.
 
-JSON Schema **2020-12** definitions below govern wire shapes. The narrative additionally governs byte/global aggregate limits, valid calendar/time/span relationships, intent/action/identity consistency, grant signatures/expiry/authority, enrollment, single-server lock, replay, current privacy eligibility and frozen semantic oracle. Enable date/date-time format assertion. Schema shape validation cannot establish those domain or cryptographic properties.
-
-## Tool schema bindings and bounded materialization
-
-For each tools/list inputSchema/outputSchema, materialize a self-contained object with type:"object", this bundle's $schema, $ref:"#/$defs/<definition>", and **only the transitive $defs reference closure reachable from that definition**, excluding the definition itself from the root properties but retaining it in $defs. Omit bundle $id to avoid resolver collisions. No network references. Do not embed every registry definition into every tool: the five tools' ten minimal schema objects total **41725 compact UTF-8 bytes** for this revision; whole-registry repetition unnecessarily consumes model context. Actual tokenizer/context fit remains untested.
-
-| Tool | input definition | output definition |
+| Tool | Input | Output |
 | --- | --- | --- |
 | grm_prepare_change_v1 | PrepareInput | PrepareResult |
 | grm_commit_change_v1 | CommitInput | CommitResult |
@@ -18,16 +12,7 @@ For each tools/list inputSchema/outputSchema, materialize a self-contained objec
 | grm_read_v1 | ReadInput | ReadResult |
 | grm_operation_status_v1 | StatusInput | StatusResult |
 
-The bundle root is a registry, not a permissive input schema. Never use it alone to validate requests. TerminalGrant/GrantPayload/Signature describe the **trusted local operator artifact only**, not MCP tool input or model approval; they are unreachable from every tool input. Additional properties are rejected, including model-supplied owner_grant/token/signature fields.
-
-## Refinement equivalence
-
-- Required Plan.authorization is delegated/not_required for ordinary actions or owner_terminal/required for delete_source. Missing/invalid local grant leaves a deletion plan prepared and returns OWNER_GRANT_REQUIRED/OWNER_GRANT_INVALID with unchanged retry identity. Client capabilities are checked separately. confirm:true still cannot grant deletion.
-- Single active stdio server: second startup rejects INSTALLATION_BUSY before discovery/database access; the startup failure is a content-free stderr reason/nonzero exit, not a private MCP response. Overlapping requests within the sole server and subsequent restarts retain the documented replay contract.
-- Limits is one closed constant object reflecting conservative corpus/request/response/hop/traversal/path/hydration/evidence/deadline ceilings; required in self and Answer. Paths allow at most four entities (three hops). Global <=10 paths, <=20 hydrated fragments and <=8000 evidence tokens require semantic aggregate checks over the query, not each page.
-- CommittedUnavailable exposes only opaque OpID/committed timestamp after private receipt payload/fingerprints are scrubbed. It never reapplies a mutation and carries no plan/digest/source/person association.
-- Token values are ASCII base64url 1..512. Grant's authority epoch/key/nonce are protected operator values, not source-derived hashes. The 86-character example signature below is **deliberately nonauthentic**: shape acceptance is not signature verification.
-- Concrete selected candidate: Goose CLI v1.60.2 + Ollama v0.40.17/local Qwen 7B path on Ubuntu 24.04 x86-64, official Go SDK v1.7.0, dated MCP 2025-11-25. Exact negotiated interoperability/full model identity/offline behavior remain adverse qualification gaps in the narrative. No code/config/download/service action occurred.
+TerminalGrant remains a local operator artifact outside every MCP input closure. Signed session/base fields remain required. OpID cryptographic issuance is a domain check, not inferred from its pattern. current_index_revision null is the sole documented readiness exception to no-null in the prior contract. Export known_order and exact FactVersionRef types compose with the closed native bundle below.
 
 ## Registry
 
@@ -93,9 +78,9 @@ The bundle root is a registry, not a permissive input schema. Never use it alone
     },
     "OpID": {
       "type": "string",
-      "minLength": 1,
-      "maxLength": 70,
-      "pattern": "^op_[A-Za-z0-9_-]{1,64}$"
+      "minLength": 4,
+      "maxLength": 83,
+      "pattern": "^op_[A-Za-z0-9_-]{1,80}$"
     },
     "PlanID": {
       "type": "string",
@@ -430,7 +415,7 @@ The bundle root is a registry, not a permissive input schema. Never use it alone
           "maxItems": 20
         },
         "supersedes": {
-          "$ref": "#/$defs/FactID"
+          "$ref": "#/$defs/FactVersionRef"
         }
       },
       "required": [
@@ -540,12 +525,21 @@ The bundle root is a registry, not a permissive input schema. Never use it alone
             },
             "new_name": {
               "$ref": "#/$defs/Label"
+            },
+            "evidence": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/Evidence"
+              },
+              "minItems": 1,
+              "maxItems": 20
             }
           },
           "required": [
             "type",
             "entity",
-            "new_name"
+            "new_name",
+            "evidence"
           ],
           "additionalProperties": false
         },
@@ -557,11 +551,20 @@ The bundle root is a registry, not a permissive input schema. Never use it alone
             },
             "commitment": {
               "$ref": "#/$defs/CommitmentID"
+            },
+            "evidence": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/Evidence"
+              },
+              "minItems": 1,
+              "maxItems": 20
             }
           },
           "required": [
             "type",
-            "commitment"
+            "commitment",
+            "evidence"
           ],
           "additionalProperties": false
         },
@@ -600,59 +603,91 @@ The bundle root is a registry, not a permissive input schema. Never use it alone
       "additionalProperties": false
     },
     "PrepareInput": {
-      "type": "object",
-      "properties": {
-        "contract": {
-          "const": "1"
-        },
-        "operation_id": {
-          "$ref": "#/$defs/OpID"
-        },
-        "intent": {
-          "type": "string",
-          "enum": [
-            "capture",
-            "correct",
-            "rename",
-            "complete",
-            "delete"
-          ]
-        },
-        "text": {
-          "$ref": "#/$defs/NL"
-        },
-        "bindings": {
-          "type": "array",
-          "items": {
-            "$ref": "#/$defs/Binding"
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "contract": {
+              "const": "1"
+            },
+            "operation_id": {
+              "$ref": "#/$defs/OpID"
+            },
+            "intent": {
+              "type": "string",
+              "enum": [
+                "capture",
+                "correct",
+                "rename",
+                "complete"
+              ]
+            },
+            "text": {
+              "$ref": "#/$defs/NL"
+            },
+            "bindings": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/Binding"
+              },
+              "minItems": 0,
+              "maxItems": 20
+            },
+            "targets": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/Ref"
+              },
+              "minItems": 0,
+              "maxItems": 20
+            },
+            "sources": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/SourceDraft"
+              },
+              "minItems": 0,
+              "maxItems": 10
+            }
           },
-          "minItems": 0,
-          "maxItems": 20
+          "required": [
+            "contract",
+            "operation_id",
+            "intent",
+            "text"
+          ],
+          "additionalProperties": false
         },
-        "targets": {
-          "type": "array",
-          "items": {
-            "$ref": "#/$defs/Ref"
+        {
+          "type": "object",
+          "properties": {
+            "contract": {
+              "const": "1"
+            },
+            "operation_id": {
+              "$ref": "#/$defs/OpID"
+            },
+            "intent": {
+              "const": "delete"
+            },
+            "targets": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/SourceID"
+              },
+              "minItems": 1,
+              "maxItems": 1
+            }
           },
-          "minItems": 0,
-          "maxItems": 20
-        },
-        "sources": {
-          "type": "array",
-          "items": {
-            "$ref": "#/$defs/SourceDraft"
-          },
-          "minItems": 0,
-          "maxItems": 10
+          "required": [
+            "contract",
+            "operation_id",
+            "intent",
+            "targets"
+          ],
+          "additionalProperties": false
         }
-      },
-      "required": [
-        "contract",
-        "operation_id",
-        "intent",
-        "text"
-      ],
-      "additionalProperties": false
+      ]
     },
     "CommitInput": {
       "type": "object",
@@ -793,6 +828,9 @@ The bundle root is a registry, not a permissive input schema. Never use it alone
           "type": "integer",
           "minimum": 1,
           "maximum": 2000
+        },
+        "version": {
+          "$ref": "#/$defs/Version"
         }
       },
       "required": [
@@ -802,20 +840,40 @@ The bundle root is a registry, not a permissive input schema. Never use it alone
       "additionalProperties": false
     },
     "StatusInput": {
-      "type": "object",
-      "properties": {
-        "contract": {
-          "const": "1"
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "contract": {
+              "const": "1"
+            },
+            "allocate": {
+              "const": true
+            }
+          },
+          "required": [
+            "contract",
+            "allocate"
+          ],
+          "additionalProperties": false
         },
-        "operation_id": {
-          "$ref": "#/$defs/OpID"
+        {
+          "type": "object",
+          "properties": {
+            "contract": {
+              "const": "1"
+            },
+            "operation_id": {
+              "$ref": "#/$defs/OpID"
+            }
+          },
+          "required": [
+            "contract",
+            "operation_id"
+          ],
+          "additionalProperties": false
         }
-      },
-      "required": [
-        "contract",
-        "operation_id"
-      ],
-      "additionalProperties": false
+      ]
     },
     "ErrorCode": {
       "type": "string",
@@ -838,7 +896,9 @@ The bundle root is a registry, not a permissive input schema. Never use it alone
         "OWNER_GRANT_REQUIRED",
         "OWNER_GRANT_INVALID",
         "CAPABILITY_DENIED",
-        "INSTALLATION_BUSY"
+        "INSTALLATION_BUSY",
+        "OPERATION_ID_INVALID",
+        "OPERATION_ID_EXPIRED"
       ]
     },
     "Error": {
@@ -945,6 +1005,14 @@ The bundle root is a registry, not a permissive input schema. Never use it alone
         },
         "allow_new": {
           "type": "boolean"
+        },
+        "creation_evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          },
+          "minItems": 1,
+          "maxItems": 20
         }
       },
       "required": [
@@ -954,7 +1022,26 @@ The bundle root is a registry, not a permissive input schema. Never use it alone
         "candidates",
         "allow_new"
       ],
-      "additionalProperties": false
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "allow_new": {
+                "const": true
+              }
+            },
+            "required": [
+              "allow_new"
+            ]
+          },
+          "then": {
+            "required": [
+              "creation_evidence"
+            ]
+          }
+        }
+      ]
     },
     "Plan": {
       "type": "object",
@@ -972,7 +1059,7 @@ The bundle root is a registry, not a permissive input schema. Never use it alone
           "$ref": "#/$defs/Instant"
         },
         "base_revision": {
-          "$ref": "#/$defs/Version"
+          "$ref": "#/$defs/GrantVersionToken"
         },
         "identities": {
           "type": "array",
@@ -1016,6 +1103,16 @@ The bundle root is a registry, not a permissive input schema. Never use it alone
         },
         "authorization": {
           "$ref": "#/$defs/AuthorizationRequirement"
+        },
+        "instruction_source": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/SourceID"
+            },
+            {
+              "$ref": "#/$defs/Temp"
+            }
+          ]
         }
       },
       "required": [
@@ -1090,6 +1187,24 @@ The bundle root is a registry, not a permissive input schema. Never use it alone
         },
         "replayed": {
           "type": "boolean"
+        },
+        "semantic_readiness": {
+          "type": "string",
+          "enum": [
+            "pending",
+            "ready",
+            "unavailable"
+          ]
+        },
+        "current_index_revision": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/Version"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       },
       "required": [
@@ -1100,7 +1215,9 @@ The bundle root is a registry, not a permissive input schema. Never use it alone
         "revision",
         "changes",
         "id_map",
-        "replayed"
+        "replayed",
+        "semantic_readiness",
+        "current_index_revision"
       ],
       "additionalProperties": false
     },
@@ -1145,7 +1262,7 @@ The bundle root is a registry, not a permissive input schema. Never use it alone
           "$ref": "#/$defs/Instant"
         },
         "supersedes": {
-          "$ref": "#/$defs/FactID"
+          "$ref": "#/$defs/FactVersionRef"
         }
       },
       "required": [
@@ -1317,7 +1434,7 @@ The bundle root is a registry, not a permissive input schema. Never use it alone
         "facts": {
           "type": "array",
           "items": {
-            "$ref": "#/$defs/FactID"
+            "$ref": "#/$defs/FactVersionRef"
           },
           "minItems": 0,
           "maxItems": 20
@@ -1699,22 +1816,6 @@ The bundle root is a registry, not a permissive input schema. Never use it alone
           "type": "object",
           "properties": {
             "state": {
-              "const": "unknown"
-            },
-            "operation_id": {
-              "$ref": "#/$defs/OpID"
-            }
-          },
-          "required": [
-            "state",
-            "operation_id"
-          ],
-          "additionalProperties": false
-        },
-        {
-          "type": "object",
-          "properties": {
-            "state": {
               "const": "failed"
             },
             "operation_id": {
@@ -1733,6 +1834,9 @@ The bundle root is a registry, not a permissive input schema. Never use it alone
         },
         {
           "$ref": "#/$defs/CommittedUnavailable"
+        },
+        {
+          "$ref": "#/$defs/Allocated"
         }
       ]
     },
@@ -2125,6 +2229,222 @@ The bundle root is a registry, not a permissive input schema. Never use it alone
         "signature"
       ],
       "additionalProperties": false
+    },
+    "Allocated": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "const": "allocated"
+        },
+        "operation_id": {
+          "$ref": "#/$defs/OpID"
+        },
+        "expires_at": {
+          "$ref": "#/$defs/Instant"
+        }
+      },
+      "required": [
+        "state",
+        "operation_id",
+        "expires_at"
+      ],
+      "additionalProperties": false
+    },
+    "FactVersionRef": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/FactID"
+        },
+        "version": {
+          "$ref": "#/$defs/Version"
+        }
+      },
+      "required": [
+        "id",
+        "version"
+      ],
+      "additionalProperties": false
+    },
+    "Sequence": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "KnownOrder": {
+      "type": "object",
+      "properties": {
+        "from": {
+          "$ref": "#/$defs/Sequence"
+        },
+        "until": {
+          "$ref": "#/$defs/Sequence"
+        }
+      },
+      "required": [
+        "from"
+      ],
+      "additionalProperties": false
+    },
+    "ExportEntityVersion": {
+      "type": "object",
+      "properties": {
+        "record": {
+          "const": "entity_version"
+        },
+        "entity": {
+          "$ref": "#/$defs/Entity"
+        },
+        "known_from": {
+          "$ref": "#/$defs/Instant"
+        },
+        "known_order": {
+          "$ref": "#/$defs/KnownOrder"
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/StoredEvidence"
+          },
+          "minItems": 0,
+          "maxItems": 20
+        },
+        "known_until": {
+          "$ref": "#/$defs/Instant"
+        }
+      },
+      "required": [
+        "record",
+        "entity",
+        "known_from",
+        "known_order",
+        "evidence"
+      ],
+      "additionalProperties": false
+    },
+    "ExportClaimVersion": {
+      "type": "object",
+      "properties": {
+        "record": {
+          "const": "claim_version"
+        },
+        "claim": {
+          "$ref": "#/$defs/Claim"
+        },
+        "known_order": {
+          "$ref": "#/$defs/KnownOrder"
+        }
+      },
+      "required": [
+        "record",
+        "claim",
+        "known_order"
+      ],
+      "additionalProperties": false
+    },
+    "ExportCommitmentVersion": {
+      "type": "object",
+      "properties": {
+        "record": {
+          "const": "commitment_version"
+        },
+        "commitment": {
+          "$ref": "#/$defs/Commitment"
+        },
+        "known_order": {
+          "$ref": "#/$defs/KnownOrder"
+        }
+      },
+      "required": [
+        "record",
+        "commitment",
+        "known_order"
+      ],
+      "additionalProperties": false
+    },
+    "ExportUnavailableVersion": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "record": {
+              "const": "unavailable_version"
+            },
+            "ref": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/EntityID"
+                },
+                {
+                  "$ref": "#/$defs/FactID"
+                },
+                {
+                  "$ref": "#/$defs/CommitmentID"
+                }
+              ]
+            },
+            "version": {
+              "$ref": "#/$defs/Version"
+            },
+            "state": {
+              "const": "deleted"
+            },
+            "recorded_at": {
+              "$ref": "#/$defs/Instant"
+            },
+            "deleted_at": {
+              "$ref": "#/$defs/Instant"
+            }
+          },
+          "required": [
+            "record",
+            "ref",
+            "version",
+            "state",
+            "recorded_at",
+            "deleted_at"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "record": {
+              "const": "unavailable_version"
+            },
+            "ref": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/EntityID"
+                },
+                {
+                  "$ref": "#/$defs/FactID"
+                },
+                {
+                  "$ref": "#/$defs/CommitmentID"
+                }
+              ]
+            },
+            "version": {
+              "$ref": "#/$defs/Version"
+            },
+            "state": {
+              "const": "ineligible"
+            },
+            "recorded_at": {
+              "$ref": "#/$defs/Instant"
+            }
+          },
+          "required": [
+            "record",
+            "ref",
+            "version",
+            "state",
+            "recorded_at"
+          ],
+          "additionalProperties": false
+        }
+      ]
     }
   }
 }
@@ -2132,50 +2452,26 @@ The bundle root is a registry, not a permissive input schema. Never use it alone
 
 ## Complete synthetic shape examples
 
-These are schema instances, not executed GRM outcomes. Baseline revision 20d061ee-ed64-4f9b-8ecd-ae2854a69219 and the proposal's A01–A13/R1–R6 table still govern meaning. Operator-grant example does not authorize any action and is never submitted to MCP.
+These are full schema instances, not executed product results. All-A operation tokens/signatures are deliberately unauthentic shape fixtures; real domain fixtures obtain authenticated server-issued IDs with fixed synthetic clock/key/RNG. They are never valid authority by shape alone.
 
-Definition **PrepareInput**:
+Definition **StatusInput**:
 ```json
 {
   "contract": "1",
-  "operation_id": "op_rename",
-  "intent": "rename",
-  "text": "Rename M1 to Morgan Vale",
-  "targets": [
-    "ent_M1"
-  ]
+  "allocate": true
 }
 ```
 
-Definition **CommitInput**:
+Definition **StatusResult**:
 ```json
 {
   "contract": "1",
-  "operation_id": "op_rename",
-  "plan_id": "plan_rename",
-  "plan_digest": "fixture-rename",
-  "choices": [],
-  "confirm": true
-}
-```
-
-Definition **QueryInput**:
-```json
-{
-  "contract": "1",
-  "question": "What role was supported on September 10?",
-  "valid_at": "2026-09-10T12:00:00Z",
-  "known_at": "2026-10-21T12:00:00Z"
-}
-```
-
-Definition **ReadInput**:
-```json
-{
-  "contract": "1",
-  "ref": "src_S1",
-  "offset": 0,
-  "length": 1000
+  "kind": "ok",
+  "data": {
+    "state": "allocated",
+    "operation_id": "op_AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+    "expires_at": "2026-10-02T12:15:00Z"
+  }
 }
 ```
 
@@ -2183,7 +2479,20 @@ Definition **StatusInput**:
 ```json
 {
   "contract": "1",
-  "operation_id": "op_rename"
+  "operation_id": "op_AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+}
+```
+
+Definition **PrepareInput**:
+```json
+{
+  "contract": "1",
+  "operation_id": "op_AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "intent": "rename",
+  "text": "Rename Morgan Lee to Morgan Vale.",
+  "targets": [
+    "ent_M1"
+  ]
 }
 ```
 
@@ -2193,17 +2502,33 @@ Definition **PrepareResult**:
   "contract": "1",
   "kind": "ok",
   "data": {
-    "operation_id": "op_rename",
+    "operation_id": "op_AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
     "plan_id": "plan_rename",
-    "plan_digest": "fixture-rename",
+    "plan_digest": "fixture_digest",
     "expires_at": "2026-10-03T12:00:00Z",
-    "base_revision": "r2",
+    "base_revision": "revision_10",
     "identities": [],
     "actions": [
       {
+        "type": "add_source",
+        "source": {
+          "id": "tmp_owner_instruction",
+          "mode": "owner_note",
+          "locator": "owner instruction",
+          "body": "Rename Morgan Lee to Morgan Vale."
+        }
+      },
+      {
         "type": "rename",
         "entity": "ent_M1",
-        "new_name": "Morgan Vale"
+        "new_name": "Morgan Vale",
+        "evidence": [
+          {
+            "source": "tmp_owner_instruction",
+            "span_start": 0,
+            "span_end": 33
+          }
+        ]
       }
     ],
     "preconditions": [
@@ -2212,154 +2537,12 @@ Definition **PrepareResult**:
         "version": "v1"
       }
     ],
-    "summary": "Rename M1 to Morgan Vale; retain Morgan Lee as prior name.",
+    "summary": "Rename selected M1 and retain its former alias.",
     "authorization": {
       "mode": "delegated",
       "state": "not_required"
-    }
-  }
-}
-```
-
-Definition **CommitResult**:
-```json
-{
-  "contract": "1",
-  "kind": "ok",
-  "data": {
-    "operation_id": "op_rename",
-    "plan_id": "plan_rename",
-    "state": "committed",
-    "committed_at": "2026-10-02T12:00:00Z",
-    "revision": "r3",
-    "changes": [
-      {
-        "ref": "ent_M1",
-        "effect": "renamed"
-      }
-    ],
-    "id_map": {},
-    "replayed": false
-  }
-}
-```
-
-Definition **QueryResult**:
-```json
-{
-  "contract": "1",
-  "kind": "ok",
-  "data": {
-    "query_id": "qry_role",
-    "as_of": "2026-10-21T12:00:00Z",
-    "valid_at": "2026-09-10T12:00:00Z",
-    "known_at": "2026-10-21T12:00:00Z",
-    "owner_timezone": "America/New_York",
-    "completeness": "complete",
-    "reasons": [],
-    "summary": "No supported Cedar Lab role on September 10 after S3 shifted the start to September 15. No earlier employer is supplied.",
-    "items": [],
-    "limits": {
-      "max_entities": 10000,
-      "max_assertion_versions": 50000,
-      "max_eligible_fragments": 10000,
-      "max_request_bytes": 65536,
-      "max_response_bytes": 65536,
-      "max_path_hops": 3,
-      "max_relationship_versions": 1000,
-      "max_returned_paths": 10,
-      "max_hydrated_fragments": 20,
-      "max_evidence_tokens": 8000,
-      "query_timeout_ms": 10000,
-      "prepare_timeout_ms": 30000,
-      "commit_timeout_ms": 10000
-    }
-  }
-}
-```
-
-Definition **ReadResult**:
-```json
-{
-  "contract": "1",
-  "kind": "ok",
-  "data": {
-    "type": "unavailable",
-    "ref": "src_S7",
-    "state": "deleted",
-    "recorded_at": "2026-10-02T12:00:00Z",
-    "deleted_at": "2026-10-21T12:00:00Z"
-  }
-}
-```
-
-Definition **StatusResult**:
-```json
-{
-  "contract": "1",
-  "kind": "ok",
-  "data": {
-    "state": "applying",
-    "operation_id": "op_rename"
-  }
-}
-```
-
-Definition **CommitResult**:
-```json
-{
-  "contract": "1",
-  "kind": "error",
-  "error": {
-    "code": "REPLAY_CONFLICT",
-    "message": "Operation ID already binds a different reviewed request.",
-    "retry": "new_request",
-    "operation_id": "op_rename"
-  }
-}
-```
-
-Definition **CommitResult**:
-```json
-{
-  "contract": "1",
-  "kind": "ok",
-  "data": {
-    "state": "applying",
-    "operation_id": "op_rename"
-  }
-}
-```
-
-Definition **PrepareResult**:
-```json
-{
-  "contract": "1",
-  "kind": "ok",
-  "data": {
-    "operation_id": "op_delete_S7",
-    "plan_id": "plan_delete_S7",
-    "plan_digest": "fixture_delete_S7",
-    "expires_at": "2026-10-22T12:00:00Z",
-    "base_revision": "r20",
-    "identities": [],
-    "actions": [
-      {
-        "type": "delete_source",
-        "source": "src_S7"
-      }
-    ],
-    "preconditions": [
-      {
-        "ref": "src_S7",
-        "version": "v3"
-      }
-    ],
-    "summary": "Delete the selected source and all covered private derivatives, including historical routes.",
-    "authorization": {
-      "mode": "owner_terminal",
-      "state": "required"
-    }
+    },
+    "instruction_source": "tmp_owner_instruction"
   }
 }
 ```
@@ -2368,9 +2551,9 @@ Definition **CommitInput**:
 ```json
 {
   "contract": "1",
-  "operation_id": "op_delete_S7",
-  "plan_id": "plan_delete_S7",
-  "plan_digest": "fixture_delete_S7",
+  "operation_id": "op_AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "plan_id": "plan_rename",
+  "plan_digest": "fixture_digest",
   "choices": [],
   "confirm": true
 }
@@ -2380,25 +2563,29 @@ Definition **CommitResult**:
 ```json
 {
   "contract": "1",
-  "kind": "error",
-  "error": {
-    "code": "OWNER_GRANT_REQUIRED",
-    "message": "Obtain an exact local owner-terminal grant, then retry the unchanged commit.",
-    "retry": "same_request",
-    "operation_id": "op_delete_S7"
-  }
-}
-```
-
-Definition **CommitResult**:
-```json
-{
-  "contract": "1",
   "kind": "ok",
   "data": {
-    "state": "committed_unavailable",
-    "operation_id": "op_old_capture",
-    "committed_at": "2026-10-02T12:00:00Z"
+    "operation_id": "op_AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+    "plan_id": "plan_rename",
+    "state": "committed",
+    "committed_at": "2026-10-02T12:00:00Z",
+    "revision": "revision_11",
+    "changes": [
+      {
+        "ref": "src_owner_instruction",
+        "effect": "created"
+      },
+      {
+        "ref": "ent_M1",
+        "effect": "renamed"
+      }
+    ],
+    "id_map": {
+      "tmp_owner_instruction": "src_owner_instruction"
+    },
+    "replayed": false,
+    "semantic_readiness": "pending",
+    "current_index_revision": "revision_10"
   }
 }
 ```
@@ -2409,73 +2596,175 @@ Definition **StatusResult**:
   "contract": "1",
   "kind": "ok",
   "data": {
-    "state": "committed_unavailable",
-    "operation_id": "op_old_capture",
-    "committed_at": "2026-10-02T12:00:00Z"
-  }
-}
-```
-
-Definition **ReadResult**:
-```json
-{
-  "contract": "1",
-  "kind": "ok",
-  "data": {
-    "type": "self",
-    "owner": "ent_O",
-    "owner_timezone": "America/New_York",
-    "contract": "1",
-    "revision": "r20",
-    "limits": {
-      "max_entities": 10000,
-      "max_assertion_versions": 50000,
-      "max_eligible_fragments": 10000,
-      "max_request_bytes": 65536,
-      "max_response_bytes": 65536,
-      "max_path_hops": 3,
-      "max_relationship_versions": 1000,
-      "max_returned_paths": 10,
-      "max_hydrated_fragments": 20,
-      "max_evidence_tokens": 8000,
-      "query_timeout_ms": 10000,
-      "prepare_timeout_ms": 30000,
-      "commit_timeout_ms": 10000
+    "state": "committed",
+    "receipt": {
+      "operation_id": "op_AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "plan_id": "plan_rename",
+      "state": "committed",
+      "committed_at": "2026-10-02T12:00:00Z",
+      "revision": "revision_11",
+      "changes": [
+        {
+          "ref": "src_owner_instruction",
+          "effect": "created"
+        },
+        {
+          "ref": "ent_M1",
+          "effect": "renamed"
+        }
+      ],
+      "id_map": {
+        "tmp_owner_instruction": "src_owner_instruction"
+      },
+      "replayed": true,
+      "semantic_readiness": "ready",
+      "current_index_revision": "revision_12"
     }
   }
 }
 ```
 
-Definition **TerminalGrant**:
+Definition **CommitResult**:
 ```json
 {
-  "payload": {
-    "version": "1",
-    "installation": "installation_fixture",
-    "client": "client_fixture",
-    "operation_id": "op_delete_S7",
-    "plan_id": "plan_delete_S7",
-    "plan_digest": "fixture_delete_S7",
-    "action": "delete_source",
-    "target": "src_S7",
-    "authority_epoch": "epoch_2",
-    "key_id": "owner_key_1",
-    "nonce": "nonce_fixture",
-    "issued_at": "2026-10-21T12:00:00Z",
-    "expires_at": "2026-10-21T12:05:00Z",
-    "session": "fixture_session_1",
-    "base_revision": "fixture_revision_1"
-  },
-  "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+  "contract": "1",
+  "kind": "ok",
+  "data": {
+    "operation_id": "op_AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+    "plan_id": "plan_rename",
+    "state": "committed",
+    "committed_at": "2026-10-02T12:00:00Z",
+    "revision": "revision_11",
+    "changes": [
+      {
+        "ref": "src_owner_instruction",
+        "effect": "created"
+      },
+      {
+        "ref": "ent_M1",
+        "effect": "renamed"
+      }
+    ],
+    "id_map": {
+      "tmp_owner_instruction": "src_owner_instruction"
+    },
+    "replayed": true,
+    "semantic_readiness": "unavailable",
+    "current_index_revision": null
+  }
 }
 ```
 
-## Recorded refinement checks and limits
+Definition **PrepareInput**:
+```json
+{
+  "contract": "1",
+  "operation_id": "op_AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "intent": "delete",
+  "targets": [
+    "src_S7"
+  ]
+}
+```
 
-Later integration verification is recorded in [schema verification](schema-verification.md): full 2020-12 checks with active date-time format assertion now ran for the current registry. The earlier dependency-missing statement below is historical, not the current tooling status. Any next schema revision requires revalidation.
+Definition **ReadInput**:
+```json
+{
+  "contract": "1",
+  "ref": "fact_S2",
+  "version": "v1"
+}
+```
 
-- Registry JSON serialization/parse round-trip: passed; 66 definitions, 195 local references, zero unresolved.
-- Minimal input/output materialization: 41725 compact UTF-8 schema bytes across ten objects; actual token fit in the selected host is not measured.
-- Bounded in-memory structural probes over the used keyword subset: **19 positive instances accepted, 13 invalid instances rejected**. Negatives include forged MCP owner_grant, confirm:false, mixed cursor/question, malformed reference, null OpID, extra input field, missing Plan authorization, model-approved authorization state, four-hop limit substitution/five-entity path, private committed_unavailable/deleted-view payload and malformed grant signature length.
-- These custom probes are not JSON Schema meta-schema validation, signature verification or provider/host conformance. The prior Python jsonschema dependency was missing; no validator package was installed or repository/environment change made. Full standards validation and domain/crypto/host/runtime tests remain not run.
-- Required later tests include absent/expired/mismatched/revoked owner grant, changed digest/target/client/epoch, replay and deletion-source fingerprint purge, second-process lock rejection, restart and old-backup grant rejection. Preserve exact canonical semantic assertions.
+Definition **FactVersionRef**:
+```json
+{
+  "id": "fact_S2",
+  "version": "v1"
+}
+```
+
+Definition **ExportClaimVersion**:
+```json
+{
+  "record": "claim_version",
+  "claim": {
+    "id": "fact_S2",
+    "version": "v1",
+    "predicate": "role_at",
+    "participants": [
+      {
+        "role": "subject",
+        "entity": "ent_M1"
+      },
+      {
+        "role": "organization",
+        "entity": "ent_Cedar"
+      }
+    ],
+    "statement": "M1 researcher at Cedar Lab from September 1.",
+    "valid": {
+      "from": {
+        "precision": "day",
+        "value": "2026-09-01"
+      }
+    },
+    "known_from": "2026-10-02T12:00:00Z",
+    "known_until": "2026-10-02T12:00:00Z",
+    "evidence": [
+      {
+        "source": "src_S2",
+        "span_start": 0,
+        "span_end": 1
+      }
+    ]
+  },
+  "known_order": {
+    "from": 10,
+    "until": 11
+  }
+}
+```
+
+Definition **ExportUnavailableVersion**:
+```json
+{
+  "record": "unavailable_version",
+  "ref": "fact_S2",
+  "version": "v1",
+  "state": "deleted",
+  "recorded_at": "2026-10-02T12:00:00Z",
+  "deleted_at": "2026-10-21T12:00:00Z"
+}
+```
+
+Definition **StatusResult**:
+```json
+{
+  "contract": "1",
+  "kind": "error",
+  "error": {
+    "code": "OPERATION_ID_INVALID",
+    "message": "Operation identity is invalid.",
+    "retry": "new_request"
+  }
+}
+```
+
+Definition **StatusResult**:
+```json
+{
+  "contract": "1",
+  "kind": "error",
+  "error": {
+    "code": "REFERENCE_UNAVAILABLE",
+    "message": "Reserved operation outcome is unavailable; no replay was executed.",
+    "retry": "never",
+    "operation_id": "op_AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+  }
+}
+```
+
+## Verification
+
+See [schema verification](schema-verification.md). Recompute checks on this consolidated registry before final freeze. No implementation/runtime evidence is claimed.
