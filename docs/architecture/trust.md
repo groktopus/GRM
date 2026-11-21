@@ -233,4 +233,3 @@ Planned, not executed:
 API integrates signed fields, canonical digest and unavailable-result contract. Reliability binds protected key/configuration storage, atomic grant consumption, crash states and authority freshness. Security reviews the resulting immutable integrated proposal; CTO resolves residual same-owner trust and dependency choices. Maintainer documentation approval and default-branch merge remain required before implementation.
 
 Outcome: conditional agreement with the signed-grant direction, with explicit key-lifecycle and trust-limit corrections. No repository edits, code, external service action or runtime verification performed.
-
