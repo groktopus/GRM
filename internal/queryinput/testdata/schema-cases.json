@@ -1,0 +1,582 @@
+[
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\"}",
+    "valid": true
+  },
+  {
+    "input": "{\"question\":\"q\"}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":null,\"question\":\"q\"}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":false,\"question\":\"q\"}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":1,\"question\":\"q\"}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":[],\"question\":\"q\"}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":{},\"question\":\"q\"}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"\",\"question\":\"q\"}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"2\",\"question\":\"q\"}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\"}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":null}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":false}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":1}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":[]}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":{}}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"\"}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"2\"}",
+    "valid": true
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"bindings\":null}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"bindings\":false}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"bindings\":1}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"bindings\":[]}",
+    "valid": true
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"bindings\":{}}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"bindings\":\"x\"}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"page_size\":null}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"page_size\":false}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"page_size\":1}",
+    "valid": true
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"page_size\":[]}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"page_size\":{}}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"page_size\":\"x\"}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"valid_at\":null}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"valid_at\":false}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"valid_at\":1}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"valid_at\":[]}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"valid_at\":{}}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"valid_at\":\"x\"}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"known_at\":null}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"known_at\":false}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"known_at\":1}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"known_at\":[]}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"known_at\":{}}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"known_at\":\"x\"}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"unknown\":null}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"unknown\":false}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"unknown\":1}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"unknown\":[]}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"unknown\":{}}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"unknown\":\"x\"}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"Question\":null}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"Question\":false}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"Question\":1}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"Question\":[]}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"Question\":{}}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"Question\":\"x\"}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"cursor\":\"q\"}",
+    "valid": true
+  },
+  {
+    "input": "{\"cursor\":\"q\"}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":null,\"cursor\":\"q\"}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":false,\"cursor\":\"q\"}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":1,\"cursor\":\"q\"}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":[],\"cursor\":\"q\"}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":{},\"cursor\":\"q\"}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"\",\"cursor\":\"q\"}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"2\",\"cursor\":\"q\"}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\"}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"cursor\":null}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"cursor\":false}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"cursor\":1}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"cursor\":[]}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"cursor\":{}}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"cursor\":\"\"}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"cursor\":\"2\"}",
+    "valid": true
+  },
+  {
+    "input": "{\"contract\":\"1\",\"cursor\":\"q\",\"bindings\":null}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"cursor\":\"q\",\"bindings\":false}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"cursor\":\"q\",\"bindings\":1}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"cursor\":\"q\",\"bindings\":[]}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"cursor\":\"q\",\"bindings\":{}}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"cursor\":\"q\",\"bindings\":\"x\"}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"cursor\":\"q\",\"page_size\":null}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"cursor\":\"q\",\"page_size\":false}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"cursor\":\"q\",\"page_size\":1}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"cursor\":\"q\",\"page_size\":[]}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"cursor\":\"q\",\"page_size\":{}}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"cursor\":\"q\",\"page_size\":\"x\"}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"cursor\":\"q\",\"valid_at\":null}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"cursor\":\"q\",\"valid_at\":false}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"cursor\":\"q\",\"valid_at\":1}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"cursor\":\"q\",\"valid_at\":[]}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"cursor\":\"q\",\"valid_at\":{}}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"cursor\":\"q\",\"valid_at\":\"x\"}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"cursor\":\"q\",\"known_at\":null}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"cursor\":\"q\",\"known_at\":false}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"cursor\":\"q\",\"known_at\":1}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"cursor\":\"q\",\"known_at\":[]}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"cursor\":\"q\",\"known_at\":{}}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"cursor\":\"q\",\"known_at\":\"x\"}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"cursor\":\"q\",\"unknown\":null}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"cursor\":\"q\",\"unknown\":false}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"cursor\":\"q\",\"unknown\":1}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"cursor\":\"q\",\"unknown\":[]}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"cursor\":\"q\",\"unknown\":{}}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"cursor\":\"q\",\"unknown\":\"x\"}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"cursor\":\"q\",\"Question\":null}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"cursor\":\"q\",\"Question\":false}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"cursor\":\"q\",\"Question\":1}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"cursor\":\"q\",\"Question\":[]}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"cursor\":\"q\",\"Question\":{}}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"cursor\":\"q\",\"Question\":\"x\"}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"bindings\":[{\"mention\":null,\"entity\":\"ent_A\"}]}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"bindings\":[{\"mention\":false,\"entity\":\"ent_A\"}]}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"bindings\":[{\"mention\":1,\"entity\":\"ent_A\"}]}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"bindings\":[{\"mention\":[],\"entity\":\"ent_A\"}]}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"bindings\":[{\"mention\":{},\"entity\":\"ent_A\"}]}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"bindings\":[{\"mention\":\"\",\"entity\":\"ent_A\"}]}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"bindings\":[{\"entity\":\"ent_A\"}]}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"bindings\":[{\"mention\":\"m\",\"entity\":null}]}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"bindings\":[{\"mention\":\"m\",\"entity\":false}]}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"bindings\":[{\"mention\":\"m\",\"entity\":1}]}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"bindings\":[{\"mention\":\"m\",\"entity\":[]}]}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"bindings\":[{\"mention\":\"m\",\"entity\":{}}]}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"bindings\":[{\"mention\":\"m\",\"entity\":\"\"}]}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"bindings\":[{\"mention\":\"m\"}]}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"bindings\":[]}",
+    "valid": true
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"bindings\":[{\"mention\":\"m\",\"entity\":\"ent_A\"}]}",
+    "valid": true
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"bindings\":[{\"mention\":\"m\",\"entity\":\"ent_A\"},{\"mention\":\"m\",\"entity\":\"ent_A\"},{\"mention\":\"m\",\"entity\":\"ent_A\"},{\"mention\":\"m\",\"entity\":\"ent_A\"},{\"mention\":\"m\",\"entity\":\"ent_A\"},{\"mention\":\"m\",\"entity\":\"ent_A\"},{\"mention\":\"m\",\"entity\":\"ent_A\"},{\"mention\":\"m\",\"entity\":\"ent_A\"},{\"mention\":\"m\",\"entity\":\"ent_A\"},{\"mention\":\"m\",\"entity\":\"ent_A\"},{\"mention\":\"m\",\"entity\":\"ent_A\"},{\"mention\":\"m\",\"entity\":\"ent_A\"},{\"mention\":\"m\",\"entity\":\"ent_A\"},{\"mention\":\"m\",\"entity\":\"ent_A\"},{\"mention\":\"m\",\"entity\":\"ent_A\"},{\"mention\":\"m\",\"entity\":\"ent_A\"},{\"mention\":\"m\",\"entity\":\"ent_A\"},{\"mention\":\"m\",\"entity\":\"ent_A\"},{\"mention\":\"m\",\"entity\":\"ent_A\"},{\"mention\":\"m\",\"entity\":\"ent_A\"}]}",
+    "valid": true
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"bindings\":[{\"mention\":\"m\",\"entity\":\"ent_A\"},{\"mention\":\"m\",\"entity\":\"ent_A\"},{\"mention\":\"m\",\"entity\":\"ent_A\"},{\"mention\":\"m\",\"entity\":\"ent_A\"},{\"mention\":\"m\",\"entity\":\"ent_A\"},{\"mention\":\"m\",\"entity\":\"ent_A\"},{\"mention\":\"m\",\"entity\":\"ent_A\"},{\"mention\":\"m\",\"entity\":\"ent_A\"},{\"mention\":\"m\",\"entity\":\"ent_A\"},{\"mention\":\"m\",\"entity\":\"ent_A\"},{\"mention\":\"m\",\"entity\":\"ent_A\"},{\"mention\":\"m\",\"entity\":\"ent_A\"},{\"mention\":\"m\",\"entity\":\"ent_A\"},{\"mention\":\"m\",\"entity\":\"ent_A\"},{\"mention\":\"m\",\"entity\":\"ent_A\"},{\"mention\":\"m\",\"entity\":\"ent_A\"},{\"mention\":\"m\",\"entity\":\"ent_A\"},{\"mention\":\"m\",\"entity\":\"ent_A\"},{\"mention\":\"m\",\"entity\":\"ent_A\"},{\"mention\":\"m\",\"entity\":\"ent_A\"},{\"mention\":\"m\",\"entity\":\"ent_A\"}]}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"page_size\":0}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"page_size\":1}",
+    "valid": true
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"page_size\":20}",
+    "valid": true
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"page_size\":21}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"page_size\":1.5}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"valid_at\":\"2000-02-29T00:00:00Z\"}",
+    "valid": true
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"known_at\":\"2000-02-29T00:00:00Z\"}",
+    "valid": true
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"valid_at\":\"1900-02-29T00:00:00Z\"}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"known_at\":\"1900-02-29T00:00:00Z\"}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"valid_at\":\"2016-12-31T24:00:00Z\"}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"known_at\":\"2016-12-31T24:00:00Z\"}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"valid_at\":\"2016-12-31T23:59:59.0Z\"}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"known_at\":\"2016-12-31T23:59:59.0Z\"}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"valid_at\":\"2016-12-31T23:59:59+00:00\"}",
+    "valid": false
+  },
+  {
+    "input": "{\"contract\":\"1\",\"question\":\"q\",\"known_at\":\"2016-12-31T23:59:59+00:00\"}",
+    "valid": false
+  },
+  {
+    "input": "{}",
+    "valid": false
+  },
+  {
+    "input": "[]",
+    "valid": false
+  },
+  {
+    "input": "null",
+    "valid": false
+  },
+  {
+    "input": "1",
+    "valid": false
+  },
+  {
+    "input": "true",
+    "valid": false
+  },
+  {
+    "input": "\"x\"",
+    "valid": false
+  }
+]
