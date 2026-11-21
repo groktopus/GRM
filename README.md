@@ -6,6 +6,6 @@ We're starting GRM to put those pieces back together. It’s a personal CRM for 
 
 The point isn’t another place to check. It’s to remember where you left off with people and have a better reason to reach out than “it’s been a while.” GRM won’t send the message for you.
 
-This is the beginning, not a release. We’re [researching the design](docs/design-considerations.md) before writing the software. If you want to help shape it, start with the [contribution guide](CONTRIBUTING.md).
+This is the beginning, not a release. We’ve [recorded the product decisions](docs/product-decisions.md) and are [researching the design](docs/design-considerations.md) before writing the software. If you want to help shape it, start with the [contribution guide](CONTRIBUTING.md).
 
 MIT licensed.
