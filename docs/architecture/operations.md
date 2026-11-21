@@ -1,5 +1,7 @@
 > Proposed governing documentation. Read [MVP integration](mvp.md) first: its explicit dispositions supersede conflicting specialist-era wording and close the listed integration gaps. No implementation is authorized until maintainer agreement, approval and default-branch merge.
 
+[Durable domain watermark](domain-watermark.md) is normative over earlier domain-counter, control-kind and recovery statements. It adds the fourth closed control kind and pre-transaction durable revision reservation; historical no-reuse claims use this protocol.
+
 # GRM deployment, portability and deletion-safe recovery proposal
 Status: proposed architecture contribution for GRO-24; not approval, implemented behavior, or recovery evidence. Author: Reliability Engineer. Date: 2026-11-21. Version: proposal 2. Refined against GRO-24 architecture-decision-reconciliation revision 4ebf319a-8eb8-4ce9-9b9b-248483bf5a60.
 

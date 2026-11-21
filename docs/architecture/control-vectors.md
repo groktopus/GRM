@@ -95,3 +95,67 @@ Message byte length: 418. Exact signing-message hex:
 Message SHA256 (encoding check, not signature): `90065c5527120e0798a6bd0303cd484f95d653dec640fdb00071f57a73b1be7c`.
 
 Reject every single-field mutation against its original signature, including appended session/base. Persistent log negative vectors derive by mutating exactly one indicated byte/property of the fixed frames above: first length byte to ff (reject before allocation), final tag byte XOR01 (complete invalid MAC, no truncation), remove final tag byte (truncated suffix only beyond all witnessed heads), sequence=previous sequence, lineage=fixtureB, kind=unknown, previous=64 zeros, extra field, duplicated version, whitespace/newline suffix. Recomputing a valid MAC for altered sequence/lineage/type still fails semantic chain/type validation. These latter fixtures use the public test key; an attacker cannot recompute production MAC.
+
+## Watermark continuation (E01)
+
+These arithmetic fixtures continue the original chain; the intervening non-domain frame demonstrates independent sequences. They are encoder fixtures, not a claim that the earlier synthetic denial had a domain transaction.
+
+### 4 domain_revision_reserved
+
+Exact P, no trailing LF:
+
+```json
+{"version":1,"lineage":"fixtureA","key_id":"fixtureKey1","sequence":4,"previous":"f0f0eb9da884051321f01789e9f1609da5d2193a0641cf12774c39b303f81d53","kind":"domain_revision_reserved","payload":{"domain_revision":1,"recorded_at":"2026-10-20T12:00:00Z"}}
+```
+
+Length 251; prefix `00000000000000fb`; tag `029feda911523c2d68bc9a501a4f77f5712326e1e5e5573b2cacbcdec1b1baff`; head `ffa93feb76bb67f07a2aaabde6e375252616246e47924c6c0d4f7897d8b02680`. Entire frame:
+
+```text
+00000000000000fb7b2276657273696f6e223a312c226c696e65616765223a226669787475726541222c226b65795f6964223a22666978747572654b657931222c2273657175656e6365223a342c2270726576696f7573223a2266306630656239646138383430353133323166303137383965396631363039646135643231393361303634316366313237373463333962333033663831643533222c226b696e64223a22646f6d61696e5f7265766973696f6e5f7265736572766564222c227061796c6f6164223a7b22646f6d61696e5f7265766973696f6e223a312c227265636f726465645f6174223a22323032362d31302d32305431323a30303a30305a227d7d029feda911523c2d68bc9a501a4f77f5712326e1e5e5573b2cacbcdec1b1baff
+```
+
+Exact checkpoint:
+
+```json
+{"body":{"version":1,"lineage":"fixtureA","key_id":"fixtureKey1","sequence":4,"head":"ffa93feb76bb67f07a2aaabde6e375252616246e47924c6c0d4f7897d8b02680"},"mac":"3d4127fd5dff4a37ab155a46658ef04d2698e5bf2ef93287187cbbb26853bdea"}
+```
+
+### 5 grant_revoked
+
+Exact P, no trailing LF:
+
+```json
+{"version":1,"lineage":"fixtureA","key_id":"fixtureKey1","sequence":5,"previous":"ffa93feb76bb67f07a2aaabde6e375252616246e47924c6c0d4f7897d8b02680","kind":"grant_revoked","payload":{"grant":"fixtureGrant10","state":"revoked","recorded_at":"2026-10-20T12:00:00Z"}}
+```
+
+Length 263; prefix `0000000000000107`; tag `bb1312aee19ba1d2ec688d4e783030a7f74cb19e1f6770b465777f5fd39481ce`; head `4b4eedb5e14b536b3def5b5cd550e164fb7bff0d3bb00a09d555fcd0d445bb25`. Entire frame:
+
+```text
+00000000000001077b2276657273696f6e223a312c226c696e65616765223a226669787475726541222c226b65795f6964223a22666978747572654b657931222c2273657175656e6365223a352c2270726576696f7573223a2266666139336665623736626236376630376132616161626465366533373532353236313632343665343739323463366330643466373839376438623032363830222c226b696e64223a226772616e745f7265766f6b6564222c227061796c6f6164223a7b226772616e74223a22666978747572654772616e743130222c227374617465223a227265766f6b6564222c227265636f726465645f6174223a22323032362d31302d32305431323a30303a30305a227d7dbb1312aee19ba1d2ec688d4e783030a7f74cb19e1f6770b465777f5fd39481ce
+```
+
+Exact checkpoint:
+
+```json
+{"body":{"version":1,"lineage":"fixtureA","key_id":"fixtureKey1","sequence":5,"head":"4b4eedb5e14b536b3def5b5cd550e164fb7bff0d3bb00a09d555fcd0d445bb25"},"mac":"ede64f3d8e1b425006f1950b6656ab69c43cb74ab2294150de26e0714fc99144"}
+```
+
+### 6 domain_revision_reserved
+
+Exact P, no trailing LF:
+
+```json
+{"version":1,"lineage":"fixtureA","key_id":"fixtureKey1","sequence":6,"previous":"4b4eedb5e14b536b3def5b5cd550e164fb7bff0d3bb00a09d555fcd0d445bb25","kind":"domain_revision_reserved","payload":{"domain_revision":2,"recorded_at":"2026-10-20T12:00:00Z"}}
+```
+
+Length 251; prefix `00000000000000fb`; tag `b69a0a988d0a47db259e8f1c428447abe4cd56b5604e15db2e4589d3355b0a92`; head `d2b09b664b13e6b5564ee08476c0b18017eaaedc5c7d4ab1c131d1d8e7d77881`. Entire frame:
+
+```text
+00000000000000fb7b2276657273696f6e223a312c226c696e65616765223a226669787475726541222c226b65795f6964223a22666978747572654b657931222c2273657175656e6365223a362c2270726576696f7573223a2234623465656462356531346235333662336465663562356364353530653136346662376266663064336262303061303964353535666364306434343562623235222c226b696e64223a22646f6d61696e5f7265766973696f6e5f7265736572766564222c227061796c6f6164223a7b22646f6d61696e5f7265766973696f6e223a322c227265636f726465645f6174223a22323032362d31302d32305431323a30303a30305a227d7db69a0a988d0a47db259e8f1c428447abe4cd56b5604e15db2e4589d3355b0a92
+```
+
+Exact checkpoint:
+
+```json
+{"body":{"version":1,"lineage":"fixtureA","key_id":"fixtureKey1","sequence":6,"head":"d2b09b664b13e6b5564ee08476c0b18017eaaedc5c7d4ab1c131d1d8e7d77881"},"mac":"5acd1746945978406c878dea1dc898372bb14272acd1ad47d7aca723b83ab05f"}
+```

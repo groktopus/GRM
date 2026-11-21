@@ -1,4 +1,6 @@
 # Corrective MCP contract supplement
+
+[Durable domain watermark](domain-watermark.md) is normative over earlier domain-counter, control-kind and recovery statements. It adds the fourth closed control kind and pre-transaction durable revision reservation; historical no-reuse claims use this protocol.
 Status: proposal for integration by the GRO-24 sole author; no approval or implementation implied.
 
 ## Scope and precedence

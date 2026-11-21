@@ -1,5 +1,7 @@
 # GRM MVP governing architecture proposal
 
+[Durable domain watermark](domain-watermark.md) is normative over earlier domain-counter, control-kind and recovery statements. It adds the fourth closed control kind and pre-transaction durable revision reservation; historical no-reuse claims use this protocol.
+
 Status: proposed, not maintainer-approved or merged. No implementation, prototype, scaffold, configuration or workflow is authorized by this branch. Systems Architect owns integration; CTO ratifies technical decisions; CPO alone changes product scope; maintainer retains agreement, approval and merge authority. Subsequent implementation PRs must cite the merged versions of these documents.
 
 ## Authority, reading order and design boundaries
