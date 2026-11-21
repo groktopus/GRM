@@ -163,3 +163,20 @@ func TestEndpoints(t *testing.T) {
 		check(t, encoded(map[string]any{"contract": "1", "question": "q", "bindings": []any{map[string]any{"mention": "m", "entity": value}}}), false)
 	}
 }
+
+// TestYearZeroCharacterization records the GRM/Go outcome separately from the
+// pinned Python checker, whose date-time checker rejects year zero. That checker
+// limitation must not become a universal RFC3339/schema rejection oracle.
+func TestYearZeroCharacterization(t *testing.T) {
+	const value = "0000-01-01T00:00:00Z"
+	for _, field := range []string{"valid_at", "known_at"} {
+		q := check(t, encoded(map[string]any{"contract": "1", "question": "q", field: value}), true)
+		got := q.ValidAt
+		if field == "known_at" {
+			got = q.KnownAt
+		}
+		if got == nil || string(*got) != value || encoded(got) != encoded(value) {
+			t.Fatalf("%s year-zero preservation: %+v", field, q)
+		}
+	}
+}

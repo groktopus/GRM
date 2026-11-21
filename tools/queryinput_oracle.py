@@ -1,6 +1,7 @@
 """Regenerate shape differential cases from the checked-in normative schema.
 Run with tools/oracle-requirements.txt. Leap applicability is a separate Go domain
-oracle: this Python format checker rejects RFC3339 leap seconds.
+oracle: this pinned Python checker rejects RFC3339 leap seconds and year zero;
+its format verdict is not a universal RFC3339/schema acceptance oracle.
 """
 import json
 from pathlib import Path
@@ -15,6 +16,14 @@ checker = FormatChecker()
 assert not checker.conforms('not-a-date', 'date-time')
 assert not checker.conforms('2016-12-31T23:59:60Z', 'date-time')
 validator = Draft202012Validator(schema, format_checker=checker)
+# Pinned-checker characterization only. Go accepts and preserves this valid
+# four-digit year in TestYearZeroCharacterization; do not turn Python rejection
+# into a GRM rejection fixture in schema-cases.json.
+year_zero = '0000-01-01T00:00:00Z'
+assert not checker.conforms(year_zero, 'date-time')
+for field in ['valid_at', 'known_at']:
+    assert not validator.is_valid({'contract': '1', 'question': 'q', field: year_zero})
+print('Pinned Python characterization: year zero rejected for valid_at/known_at; Go acceptance tested separately')
 cases = []
 def add(value):
     cases.append({'input': json.dumps(value, ensure_ascii=False, separators=(',', ':')), 'valid': validator.is_valid(value)})
